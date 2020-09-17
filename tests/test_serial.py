@@ -1,5 +1,5 @@
 import pytest
-from main import calculate_checksum
+from pyservo.serial import *
 
 def test_calculate_checksum():
     packet = bytearray([0x00, 0x00, 0x00])

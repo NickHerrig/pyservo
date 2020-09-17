@@ -43,6 +43,10 @@ def calculate_checksum(packet):
     return 0x80 | ( sum(packet) & 0x7f )
 
 
+def calculate_packet_length(data):
+    return
+
+
 def read_drive_id():
 
     drive_id = 0x02
@@ -50,7 +54,7 @@ def read_drive_id():
     packet_length = 0x80
     byte_two = func_code | packet_length
 
-    data = 0x00  #DUMMY DATA
+    data = 0x81  #DUMMY DATA
 
     packet = bytearray([drive_id, byte_two, data])
 
@@ -59,19 +63,20 @@ def read_drive_id():
 
     return packet
 
-if __name__=='__main__':
-    s = serial.Serial(os.getenv('USB_PORT'),
+
+def main():
+    s = serial.Serial(os.environ['USB_PORT'],
                       baudrate=38400,
                       parity=serial.PARITY_NONE,
-                      stopbits=serial.STOPBITS_TWO,
+                      stopbits=serial.STOPBITS_ONE,
                       bytesize=serial.EIGHTBITS,
                       timeout=1)
 
     print("Conntected to device:", s.name)
     packet = read_drive_id()
+    print("Writing packet:", packet)
     bytes_written = s.write(packet)
-    print(bytes_written)
-    response = s.read(2)
+    response = s.read(10)
     print(response)
 
     s.close()
