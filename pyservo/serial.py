@@ -57,15 +57,43 @@ def calculate_packet_length(data):
         return 0xe0
 
 
-def servo_stop(data=0):
-    drive_id = DRIVE_ID
+def create_data_packets(data):
+    packet_length = calculate_packet_length(data)
+    data_byte_four =  (data & 0xfe00000) >> 21
+    data_byte_three = (data & 0x1fc000) >> 14
+    data_byte_two =   (data & 0x3f80) >> 7
+    data_byte_one =   (data & 0x7f)
 
+    data_byte_four |= 0x80
+    data_byte_three |= 0x80
+    data_byte_two |= 0x80
+    data_byte_one |= 0x80
+
+    if packet_length == 0x80:
+        return [data_byte_one]
+
+    elif packet_length == 0xa0:
+        return [data_byte_two, data_byte_one]
+
+    elif packet_length == 0xc0:
+        return [data_byte_three, data_byte_two, data_byte_one]
+
+    elif packet_length == 0xe0:
+        return [data_byte_four, data_byte_three, data_byte_two, data_byte_one]
+
+
+def servo_stop(data=0):
+    packet = bytearray()
+
+    drive_id = DRIVE_ID
     func_code = 0x03
     packet_length = calculate_packet_length(data)
-    byte_two = func_code | packet_length
-    data = 0x80 | data
+    func_code_packet_length = func_code | packet_length
+    data = create_data_packets(data, packet_length)
 
-    packet = bytearray([drive_id, byte_two, data])
+    packet.append(drive_id)
+    packet.append(func_code_packet_length)
+    packet.extend(data)
 
     checksum = calculate_checksum(packet)
     packet.append(checksum)
