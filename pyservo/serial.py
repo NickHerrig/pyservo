@@ -46,32 +46,24 @@ def calculate_checksum(packet):
     return 0x80 | ( sum(packet) & 0x7f )
 
 
+def calculate_packet_length(data):
+    if -64 <= data <= 63:
+        return 0x80
+    elif -8192 <= data <= 8191:
+        return 0xa0
+    elif -1048576 <= data <= 1048575:
+        return 0xc0
+    elif -134217728 <= data <= 134217727:
+        return 0xe0
 
-def general_read():
 
+def servo_stop(data=0):
     drive_id = DRIVE_ID
-    func_code = 0x0e
-    packet_length = 0x80
-    byte_two = func_code | packet_length
 
-    data = 0x80 | 0x1b
-
-    packet = bytearray([drive_id, byte_two, data])
-
-    checksum = calculate_checksum(packet)
-    packet.append(checksum)
-
-    return packet
-
-
-def stop_motor():
-
-    drive_id = DRIVE_ID
     func_code = 0x03
-    packet_length = 0x80
+    packet_length = calculate_packet_length(data)
     byte_two = func_code | packet_length
-
-    data = 0x80  #Go to 0 - stop motor
+    data = 0x80 | data
 
     packet = bytearray([drive_id, byte_two, data])
 
@@ -90,7 +82,7 @@ def main():
                       timeout=1)
 
     print("Conntected to device:", s.name)
-    packet = stop_motor()
+    packet = servo_stop()
     print("Writing packet:", packet)
     bytes_written = s.write(packet)
     response = s.read(10)
