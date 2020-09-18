@@ -57,7 +57,7 @@ def calculate_packet_length(data):
         return 0xe0
 
 
-def create_data_packets(data):
+def create_data_bytes(data):
     packet_length = calculate_packet_length(data)
     data_byte_four =  (data & 0xfe00000) >> 21
     data_byte_three = (data & 0x1fc000) >> 14
@@ -82,18 +82,15 @@ def create_data_packets(data):
         return [data_byte_four, data_byte_three, data_byte_two, data_byte_one]
 
 
-def servo_stop(data=0):
+def create_servo_packet(func_code, data):
+    start_byte = DRIVE_ID
+    packet_len_func_code_byte = calculate_packet_length(data) | func_code
+    data_bytes = create_data_bytes(data)
+
     packet = bytearray()
-
-    drive_id = DRIVE_ID
-    func_code = 0x03
-    packet_length = calculate_packet_length(data)
-    func_code_packet_length = func_code | packet_length
-    data = create_data_packets(data, packet_length)
-
-    packet.append(drive_id)
-    packet.append(func_code_packet_length)
-    packet.extend(data)
+    packet.append(start_byte)
+    packet.append(packet_len_func_code_byte)
+    packet.extend(data_bytes)
 
     checksum = calculate_checksum(packet)
     packet.append(checksum)
@@ -110,9 +107,6 @@ def main():
                       timeout=1)
 
     print("Conntected to device:", s.name)
-    packet = servo_stop()
     print("Writing packet:", packet)
-    bytes_written = s.write(packet)
-    response = s.read(10)
 
     s.close()

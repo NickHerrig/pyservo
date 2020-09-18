@@ -34,7 +34,7 @@ def test_calculate_packet_length(test_data, expected_packet_length):
 
 
 @pytest.mark.parametrize(
-    "test_data, expected_data_packets",[
+    "test_data, expected_data_bytes",[
      (60,       [0xbc]),
      (-60,      [0xc4]),
      (120,      [0x80, 0xf8]),
@@ -42,5 +42,14 @@ def test_calculate_packet_length(test_data, expected_packet_length):
      (9000,     [128, 198, 168]),
      (1200000,  [128, 201, 159, 128]),
 ])
-def test_create_data_packets(test_data, expected_data_packets):
-    assert create_data_packets(test_data) == expected_data_packets
+def test_create_data_bytes(test_data, expected_data_bytes):
+    assert create_data_bytes(test_data) == expected_data_bytes
+
+
+@pytest.mark.parametrize(
+    "func_code, data, expected_packet",[
+     (0x00,     0,   bytearray([0x02, 0x80, 0x80, 0x82])),
+])
+def test_create_servo_packet(func_code, data, expected_packet):
+    assert create_servo_packet(func_code, data) == expected_packet
+
