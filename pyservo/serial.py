@@ -38,6 +38,9 @@ checksum = One byte
 
 """
 
+DRIVE_ID = int(os.environ['PYSERVO_DRIVE_ID'])
+PORT = os.environ['PYSERVO_USB_PORT']
+
 
 def calculate_checksum(packet):
     return 0x80 | ( sum(packet) & 0x7f )
@@ -46,12 +49,12 @@ def calculate_checksum(packet):
 
 def general_read():
 
-    drive_id = 0x02
+    drive_id = DRIVE_ID
     func_code = 0x0e
     packet_length = 0x80
     byte_two = func_code | packet_length
 
-    data = 0x80 | 0x1b  #Go to 0 - aka stop motor
+    data = 0x80 | 0x1b
 
     packet = bytearray([drive_id, byte_two, data])
 
@@ -63,7 +66,7 @@ def general_read():
 
 def stop_motor():
 
-    drive_id = 0x02
+    drive_id = DRIVE_ID
     func_code = 0x03
     packet_length = 0x80
     byte_two = func_code | packet_length
@@ -79,7 +82,7 @@ def stop_motor():
 
 
 def main():
-    s = serial.Serial(os.environ['USB_PORT'],
+    s = serial.Serial(port=PORT,
                       baudrate=38400,
                       parity=serial.PARITY_NONE,
                       stopbits=serial.STOPBITS_ONE,
