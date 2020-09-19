@@ -38,11 +38,18 @@ checksum = One byte
 
 """
 
+func_code_dict = {
+    'Set_Origin':      0x00,
+    'Go_Absolute_Pos': 0x01,
+    'Go_Relative_Pos': 0x03,
+    'Read_Drive_ID':   0x06,
+}
+
 DRIVE_ID = int(os.environ['PYSERVO_DRIVE_ID'])
 PORT = os.environ['PYSERVO_USB_PORT']
 
 
-def calculate_checksum(packet):
+def create_checksum_byte(packet):
     return 0x80 | ( sum(packet) & 0x7f )
 
 
@@ -92,8 +99,8 @@ def create_servo_packet(func_code, data):
     packet.append(packet_len_func_code_byte)
     packet.extend(data_bytes)
 
-    checksum = calculate_checksum(packet)
-    packet.append(checksum)
+    checksum_byte = create_checksum_byte(packet)
+    packet.append(checksum_byte)
 
     return packet
 
@@ -107,6 +114,5 @@ def main():
                       timeout=1)
 
     print("Conntected to device:", s.name)
-    print("Writing packet:", packet)
 
     s.close()
