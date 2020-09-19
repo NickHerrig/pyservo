@@ -4,6 +4,8 @@ import os
 import serial
 
 """
+Documentation: http://www.dmm-tech.com/Files/DYN4MS-ZM7-A10A.pdf
+
 drive_id = One byte (Start byte) = Bn
  - The MSB bit of start byte is always zero, the other seven bits are used
    for the Drive ID number which is set from 0 ~ 63
@@ -39,10 +41,13 @@ checksum = One byte
 """
 
 func_code_dict = {
-    'Set_Origin':      0x00,
-    'Go_Absolute_Pos': 0x01,
-    'Go_Relative_Pos': 0x03,
-    'Read_Drive_ID':   0x06,
+    'Set_Origin':        0x00,
+    'Go_Absolute_Pos':   0x01,
+    'Go_Relative_Pos':   0x03,
+    'Read_Drive_ID':     0x06,
+    'Read_Drive_Config': 0x08,
+    'Read_SpeedGain':    0x19,
+    'Set_SpeedGain':     0x11,
 }
 
 DRIVE_ID = int(os.environ['PYSERVO_DRIVE_ID'])
@@ -105,6 +110,25 @@ def create_servo_packet(func_code, data):
     return packet
 
 
+def read_speed_gain(s):
+    func_code = func_code_dict['Read_SpeedGain']
+    packet = create_servo_packet(func_code, 1)
+
+    s.write(packet)
+    response = s.read(8)
+    return response
+
+
+def set_speed_gain(s):
+    func_code = func_code_dict['Set_SpeedGain']
+    data = 4
+    packet = create_servo_packet(func_code, data)
+
+    s.write(packet)
+    response = s.read(8)
+    return response
+
+
 def main():
     s = serial.Serial(port=PORT,
                       baudrate=38400,
@@ -114,5 +138,11 @@ def main():
                       timeout=1)
 
     print("Conntected to device:", s.name)
+
+    response = set_speed_gain(s)
+    print(response)
+
+    response = read_speed_gain(s)
+    print(response)
 
     s.close()
