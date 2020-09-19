@@ -1,7 +1,4 @@
-from math import log
 import os
-
-import serial
 
 """
 Documentation: http://www.dmm-tech.com/Files/DYN4MS-ZM7-A10A.pdf
@@ -39,19 +36,6 @@ checksum = One byte
  - B0 = 0x80 + Mod(S , 128) (Then calculate checksum B0)
 
 """
-
-func_code_dict = {
-    'Set_Origin':        0x00,
-    'Go_Absolute_Pos':   0x01,
-    'Go_Relative_Pos':   0x03,
-    'Read_Drive_ID':     0x06,
-    'Read_Drive_Config': 0x08,
-    'Read_SpeedGain':    0x19,
-    'Set_SpeedGain':     0x11,
-}
-
-DRIVE_ID = int(os.environ['PYSERVO_DRIVE_ID'])
-PORT = os.environ['PYSERVO_USB_PORT']
 
 
 def create_checksum_byte(packet):
@@ -95,7 +79,8 @@ def create_data_bytes(data):
 
 
 def create_servo_packet(func_code, data):
-    start_byte = DRIVE_ID
+
+    start_byte = int(os.environ['PYSERVO_DRIVE_ID'])
     packet_len_func_code_byte = calculate_packet_length(data) | func_code
     data_bytes = create_data_bytes(data)
 
@@ -108,41 +93,3 @@ def create_servo_packet(func_code, data):
     packet.append(checksum_byte)
 
     return packet
-
-
-def read_speed_gain(s):
-    func_code = func_code_dict['Read_SpeedGain']
-    packet = create_servo_packet(func_code, 1)
-
-    s.write(packet)
-    response = s.read(8)
-    return response
-
-
-def set_speed_gain(s):
-    func_code = func_code_dict['Set_SpeedGain']
-    data = 4
-    packet = create_servo_packet(func_code, data)
-
-    s.write(packet)
-    response = s.read(8)
-    return response
-
-
-def main():
-    s = serial.Serial(port=PORT,
-                      baudrate=38400,
-                      parity=serial.PARITY_NONE,
-                      stopbits=serial.STOPBITS_ONE,
-                      bytesize=serial.EIGHTBITS,
-                      timeout=1)
-
-    print("Conntected to device:", s.name)
-
-    response = set_speed_gain(s)
-    print(response)
-
-    response = read_speed_gain(s)
-    print(response)
-
-    s.close()
