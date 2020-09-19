@@ -1,5 +1,5 @@
 import pytest
-from pyservo.serial import *
+from pyservo.write import *
 
 
 @pytest.mark.parametrize(
