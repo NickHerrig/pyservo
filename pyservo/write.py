@@ -78,7 +78,7 @@ def create_data_bytes(data):
         return [data_byte_four, data_byte_three, data_byte_two, data_byte_one]
 
 
-def create_servo_packet(func_code, data):
+def create_servo_packet(func_code, data=1):
 
     start_byte = int(os.environ['PYSERVO_DRIVE_ID'])
     packet_len_func_code_byte = calculate_packet_length(data) | func_code
