@@ -30,3 +30,24 @@ def set_speed_gain(s, data):
     bytes_written = s.write(packet)
     s.flush()
     return "Speed Set Successfully"
+
+def motor_forwards(s, data=130000000):
+    func_code = write_func_code_dict['Go_Relative_Pos']
+    packet = create_servo_packet(func_code, data)
+    bytes_written = s.write(packet)
+    res = s.read(7)
+    return "Moving forward towards the end of the track."
+
+def motor_backwards(s, data=-130000000):
+    func_code = write_func_code_dict['Go_Relative_Pos']
+    packet = create_servo_packet(func_code, data)
+    bytes_written = s.write(packet)
+    res = s.read(7)
+    return "Moving motor backwards towards the start of the track."
+
+def stop_motor(s, data=0):
+    func_code = write_func_code_dict['Go_Relative_Pos']
+    packet = create_servo_packet(func_code, data)
+    bytes_written = s.write(packet)
+    res = s.read(7)
+    return "Successfully stopped the Motor"
