@@ -1,7 +1,8 @@
 from .write import create_servo_packet
+from .read import parse_return_packet
 
 
-func_code_dict = {
+write_func_code_dict = {
     'Set_Origin':        0x00,
     'Go_Absolute_Pos':   0x01,
     'Go_Relative_Pos':   0x03,
@@ -13,20 +14,19 @@ func_code_dict = {
 
 
 def read_speed_gain(s):
-    func_code = func_code_dict['Read_SpeedGain']
-    packet = create_servo_packet(func_code, 1)
+    func_code = write_func_code_dict['Read_SpeedGain']
+    packet = create_servo_packet(func_code)
+    bytes_written = s.write(packet)
 
-    s.write(packet)
-    response = s.read(8)
+    response_packet = s.read(7)
+    response = parse_return_packet(response_packet)
 
     return response
 
 
 def set_speed_gain(s, data):
-    func_code = func_code_dict['Set_SpeedGain']
+    func_code = write_func_code_dict['Set_SpeedGain']
     packet = create_servo_packet(func_code, data)
-
-    s.write(packet)
-    response = s.read(8)
-
-    return response
+    bytes_written = s.write(packet)
+    s.flush()
+    return "Speed Set Successfully"
