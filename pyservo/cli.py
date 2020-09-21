@@ -1,66 +1,49 @@
 import argparse
 
+from .api import *
+
 def main(s):
+
+    s.flush()
+
+    FUNCTION_MAP = {
+        'read-speed': read_speed_gain,
+        'set-speed':  set_speed_gain,
+        'stop':       stop_motor,
+        'forward':    motor_forwards,
+        'backwards':  motor_backwards,
+        'status':     read_status,
+        'position':   read_position,
+        'set-origin': set_origin,
+        'send-to':    send_to,
+    }
+
     parser = argparse.ArgumentParser(
         description='Command line interface for reading and writing to DMM drive',
     )
 
-    parser.add_argument('operation', help='operation to perform on servo, example: read_speed_gain')
     parser.add_argument(
-        '--data', action='store',
-        type=int, default=1,
+        'command',
+        choices=FUNCTION_MAP.keys(),
+        help='operation to perform on servo, example: read_speed_gain',
+    )
+
+    parser.add_argument(
+        '--data',
+        action='store',
+        type=int,
         help='data to pass to the servo motor, example: 60'
     )
 
     args = parser.parse_args()
+    func = FUNCTION_MAP[args.command]
 
-    if args.operation == 'read-speed':
-        from .api import read_speed_gain
-        response = read_speed_gain(s)
+    if args.data == None:
+        response = func(s)
         print(response)
-
-    elif args.operation == 'set-speed':
-        from .api import set_speed_gain
-        response = set_speed_gain(s, data=args.data)
-        print(response)
-
-    elif args.operation == 'stop':
-        from .api import stop_motor
-        response = stop_motor(s)
-        print(response)
-
-    elif args.operation == 'forward':
-        from .api import motor_forwards
-        response = motor_forwards(s)
-        print(response)
-
-    elif args.operation == 'backwards':
-        from .api import motor_backwards
-        response = motor_backwards(s)
-        print(response)
-
-    elif args.operation == 'status':
-        from .api import read_status
-        response = read_status(s)
-        print(response)
-
-    elif args.operation == 'position':
-        from .api import read_position
-        response = read_position(s)
-        print(response)
-
-    elif args.operation == 'set-origin':
-        from .api import set_origin
-        response = set_origin(s)
-        print(response)
-
-    elif args.operation == 'send-to':
-        from .api import send_to
-        response = send_to(s, data=args.data)
-        print(response)
-
     else:
-        parser.print_help()
+        response = func(s, data=args.data)
+        print(response)
 
 
 if __name__=='__main__':
