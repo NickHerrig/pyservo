@@ -57,14 +57,31 @@ def  parse_status_data(data_byte):
 
     return servo_status
 
-
 #TODO: Implement config data parser - def  parse_config(packet):
-
 #TODO: Implement abs data parser - def  parse_config(packet):
+
+def sign_extend(value, bits):
+    # from: https://stackoverflow.com/a/32031543
+    sign_bit = 1 << (bits - 1)
+    return (value & (sign_bit - 1)) - (value & sign_bit)
+
+def parse_signed_data(data_bytes):
+#    parsed_data_bytes = [ (byte & 0x7f) for byte in data_bytes ]
+    position = sign_extend(data_bytes[0] << 1, 8) >> 1
+    for byte in data_bytes[1:]:
+        position = (position << 7) + (byte & 0x7f)
+
+    return  position
+
+def read_signed_val(self, arr):
+    for y in arr2[1:]:
+        x = (x << 7) + (y & 0x7f)
+
 
 read_func_codes_dict = {
     'Is_SpeedGain': 0x11,
     'Is_Status':    0x19,
+    'Is_AbsPos32':  0x1b,
 }
 
 
@@ -74,7 +91,8 @@ def  parse_data(packet):
         return parse_status_data(packet[2])
     # elif func_code == 0x1a:
     #     print("Is_Config  parser not implemented yet.")
-    # elif func_code == 0x1b:
+    elif func_code == read_func_codes_dict['Is_AbsPos32']:
+        return parse_signed_data(packet[2:-1])
     #     print("Absolute Position parser not implemented yet.")
     # elif func_code == 0x1e:
     #    print("Current Torque parser not implemented yet.")
