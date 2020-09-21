@@ -1,4 +1,5 @@
 
+
 def  parse_status_data(data_byte):
     """
     Documentation: http://www.dmm-tech.com/Files/DYN4MS-ZM7-A10A.pdf
@@ -22,9 +23,37 @@ def  parse_status_data(data_byte):
     """
     servo_status = {}
     if (data_byte >> 6) & 1 == 0:
-        servo_status['position'] = 'motor on position'
+        servo_status['pin2'] = '0'
     elif (data_byte >> 6) & 1 == 1:
-        servo_status['position'] = 'motor is busy'
+        servo_status['pin2'] = '1'
+
+    if (data_byte >> 5) & 1 == 0:
+        servo_status['motion'] = 'completed'
+    elif (data_byte >> 5) & 1 == 1:
+        servo_status['motion'] = 'busy'
+
+    if (data_byte >> 2) & 0b111 == 0:
+        servo_status['alarm'] = 'no alarm'
+    elif (data_byte >> 2) & 0b111 == 1:
+        servo_status['alarm'] = 'lost phase'
+    elif (data_byte >> 2) & 0b111 == 2:
+        servo_status['alarm'] = 'over current'
+    elif (data_byte >> 2) & 0b111 == 3:
+        servo_status['alarm'] = 'overheat/overpower'
+    elif (data_byte >> 2) & 0b111 == 4:
+        servo_status['alarm'] = 'rcr error'
+
+    if (data_byte >> 1) & 1 == 0:
+        servo_status['motor'] = 'servo'
+    elif (data_byte >> 5) & 1 == 1:
+        servo_status['motor'] = 'free'
+
+    if data_byte & 1 == 0:
+        servo_status['position'] = 'on position'
+    if data_byte & 1 == 1:
+        servo_status['position'] = 'busy'
+
+    return servo_status
 
 
 #TODO: Implement config data parser - def  parse_config(packet):
