@@ -39,6 +39,11 @@ def main(s):
         response = motor_backwards(s)
         print(response)
 
+    elif args.operation == 'status':
+        from .api import read_status
+        response = read_status(s)
+        print(response)
+
     else:
         parser.print_help()
 

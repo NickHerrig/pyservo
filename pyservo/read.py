@@ -42,6 +42,8 @@ def  parse_status_data(data_byte):
         servo_status['alarm'] = 'overheat/overpower'
     elif (data_byte >> 2) & 0b111 == 4:
         servo_status['alarm'] = 'rcr error'
+    elif (data_byte >> 2) & 0b111 > 4:
+        servo_status['alarm'] = 'TBD'
 
     if (data_byte >> 1) & 1 == 0:
         servo_status['motor'] = 'servo'
