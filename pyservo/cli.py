@@ -44,6 +44,21 @@ def main(s):
         response = read_status(s)
         print(response)
 
+    elif args.operation == 'position':
+        from .api import read_position
+        response = read_position(s)
+        print(response)
+
+    elif args.operation == 'set-origin':
+        from .api import set_origin
+        response = set_origin(s)
+        print(response)
+
+    elif args.operation == 'send-to':
+        from .api import send_to
+        response = send_to(s, data=args.data)
+        print(response)
+
     else:
         parser.print_help()
 
