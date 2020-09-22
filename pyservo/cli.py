@@ -7,15 +7,14 @@ def main(s):
     s.flush()
 
     FUNCTION_MAP = {
-        'read-speed': read_speed_gain,
-        'set-speed':  set_speed_gain,
         'stop':       stop_motor,
         'forward':    motor_forwards,
         'backwards':  motor_backwards,
         'status':     read_status,
         'position':   read_position,
-        'set-origin': set_origin,
         'send-to':    send_to,
+        'set-origin': set_origin,
+        'set-speed':  set_speed,
     }
 
     parser = argparse.ArgumentParser(
@@ -44,7 +43,3 @@ def main(s):
     else:
         response = func(s, data=args.data)
         print(response)
-
-
-if __name__=='__main__':
-    main()
