@@ -69,10 +69,6 @@ def parse_signed_data(data_bytes):
         position = (position << 7) + (byte & 0x7f)
     return  position
 
-def read_signed_val(self, arr):
-    for y in arr2[1:]:
-        x = (x << 7) + (y & 0x7f)
-
 read_func_codes_dict = {
     'Is_SpeedGain': 0x11,
     'Is_Status':    0x19,
