@@ -11,7 +11,16 @@ write_func_code_dict = {
     'RegisterRead_Drive_Status': 0x09,
     'General_Read':              0x0e,
     'Is_AbsPos32':               0x1b,
+    'Set_GearNumber':            0x17,
 }
+
+def set_gear_number(s, data):
+    func_code = write_func_code_dict['Set_GearNumber']
+    packet = create_servo_packet(func_code, data)
+    bytes_written = s.write(packet)
+    return_packet = s.readline()
+    print(return_packet)
+    return "Set Gear Number to {data}.".format(data=data)
 
 def set_speed(s, data):
     func_code = write_func_code_dict['Set_HighSpeed']
@@ -41,8 +50,6 @@ def set_origin(s):
     func_code = write_func_code_dict['Set_Origin']
     packet = create_servo_packet(func_code)
     bytes_written = s.write(packet)
-    return_packet = s.readline()
-    print(return_packet)
     return "Set Current Position Zero  Successfully"
 
 def send_to(s, data):

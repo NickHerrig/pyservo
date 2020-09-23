@@ -7,14 +7,15 @@ def main(s):
     s.flush()
 
     FUNCTION_MAP = {
-        'stop':       stop_motor,
-        'forward':    motor_forwards,
-        'backwards':  motor_backwards,
-        'status':     read_status,
-        'position':   read_position,
-        'send-to':    send_to,
-        'set-origin': set_origin,
-        'set-speed':  set_speed,
+        'stop':            stop_motor,
+        'forward':         motor_forwards,
+        'backwards':       motor_backwards,
+        'status':          read_status,
+        'position':        read_position,
+        'send-to':         send_to,
+        'set-origin':      set_origin,
+        'set-speed':       set_speed,
+        'set-gear-number': set_gear_number,
     }
 
     parser = argparse.ArgumentParser(
