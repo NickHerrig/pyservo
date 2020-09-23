@@ -23,6 +23,30 @@ from pyservo.read import *
                            'alarm': 'over current',
                            'motor': 'free',
                            'position': 'busy',}),
+     (0b11101111,      {
+                           'pin2': '1',
+                           'motion':'busy',
+                           'alarm': 'overheat/overpower',
+                           'motor': 'free',
+                           'position': 'busy',}),
+     (0b11110011,      {
+                           'pin2': '1',
+                           'motion':'busy',
+                           'alarm': 'rcr error',
+                           'motor': 'free',
+                           'position': 'busy',}),
+     (0b11110111,      {
+                           'pin2': '1',
+                           'motion':'busy',
+                           'alarm': 'TBD',
+                           'motor': 'free',
+                           'position': 'busy',}),
+     (0b11111011,      {
+                           'pin2': '1',
+                           'motion':'busy',
+                           'alarm': 'TBD',
+                           'motor': 'free',
+                           'position': 'busy',}),
 ])
 def test_parse_status_data(test_status_byte, expected_status):
     status = parse_status_data(test_status_byte)
