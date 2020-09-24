@@ -2,7 +2,6 @@ import pytest
 from pyservo.read import *
 
 
-
 @pytest.mark.parametrize(
     "test_status_byte, expected_status",[
      (0b10000000,      {
