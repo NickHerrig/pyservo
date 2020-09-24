@@ -1,0 +1,14 @@
+name: Deploy
+on:
+  push:
+    branches: [ master ]
+jobs:
+  build:
+    name: Checkout and Test code
+    runs-on: self-hosted
+    steps:
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - uses: actions/checkout@v2
+    - run: echo "hello world"

@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#selfhosted runners
+actions-runner/
+
 # C extensions
 *.so
 
