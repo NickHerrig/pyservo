@@ -7,8 +7,8 @@ jobs:
     name: Checkout and Test code
     runs-on: self-hosted
     steps:
+    - uses: actions/checkout@v2
+    - name: Setup/python
     - uses: actions/setup-python@v2
       with:
-        python-version: 3.7.3
-    - uses: actions/checkout@v2
-    - run: echo "hello world"
+        python-version: 3.8
