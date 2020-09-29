@@ -3,6 +3,17 @@ from pyservo.read import *
 
 
 @pytest.mark.parametrize(
+    "test_byte,     expected_integer",[
+     (0b11111111,  -1),
+     (0b01111111,  127),
+     (0b10000010,  -126),
+     (0b00000010,  2),
+])
+def test_sign_extend(test_byte, expected_integer):
+    assert sign_extend(test_byte, 8) == expected_integer
+
+
+@pytest.mark.parametrize(
     "test_status_byte, expected_status",[
      (0b10000000,      {
                            'pin2': '0',
