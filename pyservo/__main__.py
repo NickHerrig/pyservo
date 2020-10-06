@@ -4,7 +4,7 @@ import serial
 
 
 if __name__ == '__main__':
-    PORT = os.environ['PYSERVO_USB_PORT']
+    PORT = os.environ['SERVO_USB_PORT']
 
     s = serial.Serial(port=PORT,
                       baudrate=38400,

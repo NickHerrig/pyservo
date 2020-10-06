@@ -80,7 +80,7 @@ def create_data_bytes(data):
 
 def create_servo_packet(func_code, data=1):
 
-    start_byte = int(os.environ['PYSERVO_DRIVE_ID'])
+    start_byte = int(os.environ['SERVO_DRIVE_ID'])
     packet_len_func_code_byte = calculate_packet_length(data) | func_code
     data_bytes = create_data_bytes(data)
 

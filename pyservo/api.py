@@ -78,7 +78,7 @@ def send_to(s, data):
     print(return_packet)
     return "Moving towards position {data}".format(data=data)
 
-def motor_forwards(s, data=130000000):
+def motor_forward(s, data=130000000):
     func_code = write_func_code_dict['Go_Relative_Pos']
     packet = create_servo_packet(func_code, data)
     bytes_written = s.write(packet)
@@ -86,7 +86,7 @@ def motor_forwards(s, data=130000000):
     print(return_packet)
     return "Moving forward towards the end of the track."
 
-def motor_backwards(s, data=-130000000):
+def motor_backward(s, data=-130000000):
     func_code = write_func_code_dict['Go_Relative_Pos']
     packet = create_servo_packet(func_code, data)
     bytes_written = s.write(packet)

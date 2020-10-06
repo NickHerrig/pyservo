@@ -8,8 +8,8 @@ def main(s):
 
     FUNCTION_MAP = {
         'stop':             stop_motor,
-        'forward':          motor_forwards,
-        'backwards':        motor_backwards,
+        'forward':          motor_forward,
+        'backward':         motor_backward,
         'status':           read_status,
         'position':         read_position,
         'send-to':          send_to,
